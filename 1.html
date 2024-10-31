@@ -743,6 +743,26 @@ yùn dòng xì bāo yīng gāi bú cuò ba
             searchBox.value = '';
             searchText();
         }
+        
+        // 自动滚动功能
+        window.addEventListener('wheel', (event) => {
+            if (autoScrollInterval) {
+                clearInterval(autoScrollInterval);
+                autoScrollInterval = null;
+            } else {
+                const scrollDirection = event.deltaY > 0 ? 1 : -1;
+                autoScrollInterval = setInterval(() => {
+                    window.scrollBy(0, scrollDirection * 10);
+                }, 10);
+            }
+        });
+
+        window.addEventListener('click', () => {
+            if (autoScrollInterval) {
+                clearInterval(autoScrollInterval);
+                autoScrollInterval = null;
+            }
+        });
     </script>
 </body>
 </html>
