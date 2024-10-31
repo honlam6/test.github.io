@@ -42,7 +42,7 @@
             border-radius: 5px;
             white-space: pre-wrap;
             position: relative;
-            font-size: 0.7em;
+            font-size: 0.6em;
         }
         .highlight {
             background-color: #ffeb3b;
@@ -81,6 +81,20 @@
             cursor: pointer;
         }
         #alphabet-buttons button:hover {
+            background-color: #666;
+        }
+        #scroll-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #444;
+            color: #e0e0e0;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #scroll-to-top:hover {
             background-color: #666;
         }
     </style>
@@ -3856,6 +3870,8 @@ búyào gēn nǐ wán le
         <button onclick="navigateHighlight('next')">⬇️</button>
         <button onclick="scrollToTop()">🆙</button>
     </div>
+
+    <button id="scroll-to-top" onclick="scrollToTop()">⬆️ 回到顶部</button>
 
     <script>
         let currentHighlightIndex = -1;
