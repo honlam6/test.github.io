@@ -83,6 +83,27 @@
         #alphabet-buttons button:hover {
             background-color: #666;
         }
+        #scroll-buttons {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        #scroll-buttons button {
+            padding: 1em;
+            font-size: 1.5em;
+            border: none;
+            background-color: #444;
+            color: #e0e0e0;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #scroll-buttons button:hover {
+            background-color: #666;
+        }
     </style>
 </head>
 <body>
@@ -122,7 +143,7 @@
         <button onclick="appendToSearchBox('Z')">Z</button>
     </div>
 
-    <div id="original-text">收音机: 昨天情人节发生了不少交通事故。 zuó tiān qíng rén jié fā shēng le bù shǎo jiāo tōng shì gù 이번 발렌타인데이는 사건 사고가 많습니다
+    <div id="original-text">这收音机: 昨天情人节发生了不少交通事故。 zuó tiān qíng rén jié fā shēng le bù shǎo jiāo tōng shì gù 이번 발렌타인데이는 사건 사고가 많습니다
 收音机: 所幸都只是轻微的擦撞没有伤亡 suǒ xìng dōu zhǐ shì qīng wēi de cā zhuàng méi yǒu shāng wáng 다행히 경미한 충돌로 사상자는 없었지만
 收音机: 还有驾驶表示他的车子被瞬间移位 hái yǒu jià shǐ biǎo shì tā de chē zi bèi shùn jiān yí wèi  한 운전자는 차가 순간 이동했다고 전했습니다.
 收音机: 有民众说他昨天本来在骑脚踏车 yǒu mín zhòng shuō tā zuó tiān běn lái zài qí jiǎo tà chē  한 시민은 어제 자전거를 타던 중
@@ -649,7 +670,7 @@ nǐ kàn qǐ lái hěn jiàn měi
 劉文森 ： 运动细胞应该不错吧
 yùn dòng xì bāo yīng gāi bú cuò ba
 균형이 잘 잡혀서 
-楊曉淇 ： 第一次有人说我健美。</div>
+楊曉淇 ： 第一次有人说我健美</div>
 
     <div id="highlight-nav" class="highlight-nav" style="display: none;">
         <button onclick="navigateHighlight('prev')">⬆️</button>
@@ -657,10 +678,15 @@ yùn dòng xì bāo yīng gāi bú cuò ba
         <button onclick="scrollToTop()">🆙</button>
     </div>
 
+    <div id="scroll-buttons">
+        <button onclick="startAutoScroll('up')">⬆️</button>
+        <button onclick="startAutoScroll('down')">⬇️</button>
+    </div>
+
     <script>
         let currentHighlightIndex = -1;
         let matchPositions = [];
-        let autoScrollInterval = null;
+        let scrollInterval = null;
 
         document.getElementById('search-box').addEventListener('keypress', function(event) {
             if (event.key === 'Enter') {
@@ -745,23 +771,31 @@ yùn dòng xì bāo yīng gāi bú cuò ba
             searchText();
         }
 
-        // 自动滚动功能
-        window.addEventListener('wheel', (event) => {
-            if (autoScrollInterval) {
-                clearInterval(autoScrollInterval);
-                autoScrollInterval = null;
-            } else {
-                const scrollDirection = event.deltaY > 0 ? 1 : -1;
-                autoScrollInterval = setInterval(() => {
-                    window.scrollBy(0, scrollDirection * 10);
-                }, 10);
-            }
-        });
+        function startAutoScroll(direction) {
+            stopAutoScroll();
+            // 设置滚动速度（可以调整数值以调整滚动速度）
+            const scrollSpeed = 10; // 滚动速度（值越小滚动越快）
 
-        window.addEventListener('click', () => {
-            if (autoScrollInterval) {
-                clearInterval(autoScrollInterval);
-                autoScrollInterval = null;
+            scrollInterval = setInterval(() => {
+                if (direction === 'up') {
+                    window.scrollBy(0, -scrollSpeed);
+                } else if (direction === 'down') {
+                    window.scrollBy(0, scrollSpeed);
+                }
+            }, 20);
+        }
+
+        function stopAutoScroll() {
+            if (scrollInterval) {
+                clearInterval(scrollInterval);
+                scrollInterval = null;
+            }
+        }
+
+        document.addEventListener('click', stopAutoScroll);
+        window.addEventListener('scroll', (event) => {
+            if (scrollInterval) {
+                stopAutoScroll();
             }
         });
     </script>
