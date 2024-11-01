@@ -13,18 +13,18 @@
             color: #e0e0e0;
         }
         #search-box {
-            width: calc(100% - 120px);
-            padding: 0.5em;
+            width: calc(100% - 180px);
+            padding: 0.7em;
             margin-bottom: 1em;
-            font-size: 1em;
+            font-size: 1.1em;
             border: 1px solid #333;
             border-radius: 5px;
             background-color: #2c2c2c;
             color: #e0e0e0;
         }
         button {
-            padding: 0.5em 1em;
-            font-size: 1em;
+            padding: 0.7em 1.2em;
+            font-size: 1.1em;
             border: none;
             background-color: #007bff;
             color: white;
@@ -36,13 +36,13 @@
         }
         #original-text {
             margin-top: 2em;
-            padding: 1em;
+            padding: 1.5em;
             background-color: #1e1e1e;
             border: 1px solid #333;
             border-radius: 5px;
             white-space: pre-wrap;
             position: relative;
-            font-size: 0.5em;
+            font-size: 0.6em;
         }
         .highlight {
             background-color: #ffeb3b;
@@ -71,9 +71,9 @@
             margin-top: 1em;
         }
         #alphabet-buttons button {
-            padding: 0.3em;
-            margin: 0.2em;
-            font-size: 1em;
+            padding: 0.5em;
+            margin: 0.3em;
+            font-size: 1.1em;
             border: none;
             background-color: #444;
             color: #e0e0e0;
@@ -83,6 +83,20 @@
         #alphabet-buttons button:hover {
             background-color: #666;
         }
+        #scroll-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #444;
+            color: #e0e0e0;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #scroll-to-top:hover {
+            background-color: #666;
+        }
     </style>
 </head>
 <body>
@@ -90,6 +104,7 @@
     <div style="display: flex; align-items: center;">
         <input type="text" id="search-box" placeholder="输入关键词...">
         <button onclick="searchText()">搜索</button>
+        <button onclick="clearSearchBox()" style="margin-left: 10px;">清除</button>
     </div>
 
     <div id="alphabet-buttons">
@@ -121,9 +136,7 @@
         <button onclick="appendToSearchBox('Z')">Z</button>
     </div>
 
-    <div id="original-text">这里是您提供的文本内容，请根据需要进行修改。
-例如：这是用户给出的文本段落，可以用于测试搜索功能。
-收音机: 昨天情人节发生了不少交通事故。 zuó tiān qíng rén jié fā shēng le bù shǎo jiāo tōng shì gù 이번 발렌타인데이는 사건 사고가 많습니다
+    <div id="original-text">收音机: 昨天情人节发生了不少交通事故。 zuó tiān qíng rén jié fā shēng le bù shǎo jiāo tōng shì gù 이번 발렌타인데이는 사건 사고가 많습니다
 收音机: 所幸都只是轻微的擦撞没有伤亡 suǒ xìng dōu zhǐ shì qīng wēi de cā zhuàng méi yǒu shāng wáng 다행히 경미한 충돌로 사상자는 없었지만
 收音机: 还有驾驶表示他的车子被瞬间移位 hái yǒu jià shǐ biǎo shì tā de chē zi bèi shùn jiān yí wèi  한 운전자는 차가 순간 이동했다고 전했습니다.
 收音机: 有民众说他昨天本来在骑脚踏车 yǒu mín zhòng shuō tā zuó tiān běn lái zài qí jiǎo tà chē  한 시민은 어제 자전거를 타던 중
@@ -3850,8 +3863,7 @@ yòu màn chū
 또 늦게 냈어!
 孩子们：不要跟你玩了 
 búyào gēn nǐ wán le 
-너랑 안 놀아!
-</div>
+너랑 안 놀아!</div>
 
     <div id="highlight-nav" class="highlight-nav" style="display: none;">
         <button onclick="navigateHighlight('prev')">⬆️</button>
@@ -3859,9 +3871,17 @@ búyào gēn nǐ wán le
         <button onclick="scrollToTop()">🆙</button>
     </div>
 
+    <button id="scroll-to-top" onclick="scrollToTop()">⬆️顶部</button>
+
     <script>
         let currentHighlightIndex = -1;
         let matchPositions = [];
+
+        document.getElementById('search-box').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                searchText();
+            }
+        });
 
         function searchText() {
             // 获取搜索框的值
@@ -3933,6 +3953,23 @@ búyào gēn nǐ wán le
             searchBox.value += letter;
             searchBox.focus();
         }
+
+        function clearSearchBox() {
+            const searchBox = document.getElementById('search-box');
+            searchBox.value = '';
+            searchText();
+        }
+
+        // 增加滚动监听，扩大每次滑动的距离
+        window.addEventListener('wheel', function(event) {
+            event.preventDefault();
+            const scrollAmount = 150; // 调整此值以更改滑动的幅度
+            if (event.deltaY < 0) {
+                window.scrollBy(0, -scrollAmount);
+            } else {
+                window.scrollBy(0, scrollAmount);
+            }
+        }, { passive: false });
     </script>
 </body>
 </html>
